@@ -1,0 +1,162 @@
+1) user table
+
+CREATE TABLE Users(
+user_id INT PRIMARY KEY,
+email_id VARCHAR(200) UNIQUE,
+password VARCHAR(20),
+phone VARCHAR(20),
+type ENUM('ADMIN','SHOPPER'),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+---> adding the content into the table user
+
+INSERT INTO 
+Users(user_id,email_id,password, phone , type) 
+VALUES
+(1,'samyak@gmail.com','samyak1111','9351153080','SHOPPER');
+
+
+2) Address table
+
+CREATE TABLE Address(
+address_id INT PRIMARY KEY AUTO_INCREMENT,
+user_id INT NOT NULL,
+state VARCHAR(20) NOT NULL,
+city VARCHAR(20) NOT NULL,
+street VARCHAR(20) NOT NULL,
+pincode INT,
+
+FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+);
+
+--->  adding the data into the Address table
+
+INSERT INTO 
+Address(address_id, user_id , state , city, street, pincode)
+VALUES(111 , 1 , 'rajasthan' , 'jaipur' , 'mansarovar' , '302020');
+
+
+3) order/cart table 
+
+CREATE TABLE Orders(
+order_id INT PRIMARY KEY AUTO_INCREMENT,
+user_id INT,
+cart_value DECIMAL(10,2),
+order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+address_id INT,
+
+FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+FOREIGN KEY (address_id) REFERENCES Address(address_id) ON DELETE CASCADE
+);
+
+
+--> adding the data into the order table
+
+INSERT INTO Orders
+(order_id, user_id, cart_value , address_id)
+VALUES
+(333, 1 , 987 , 111);
+
+
+4) Category table
+
+CREATE TABLE Category(
+category_id INT PRIMARY KEY,
+category_name VARCHAR(200) NOT NULL UNIQUE
+);
+
+--> adding the data into the  Category table
+
+INSERT INTO Category
+(category_id, category_name)
+VALUES
+(888, 'Electronics');
+
+
+
+5) Child_category table (week entity)
+
+CREATE TABLE Child_Category(
+child_category_name VARCHAR(200),
+category_id INT,
+
+FOREIGN KEY (category_id) REFERENCES Category(category_id) ON DELETE CASCADE,
+PRIMARY KEY(child_category_name, category_id)
+);
+
+--->  adding the data into the Child_catgorytable
+
+INSERT INTO Child_Category
+(child_category_name , category_id)
+VALUES
+('mobiles' , 888);
+
+
+6) order_item table (weak entity)
+
+CREATE TABLE Order_item(
+order_item_id INT PRIMARY KEY NOT NULL,   
+order_id INT NOT NULL,
+quantity_added INT,
+total INT,
+
+FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE
+);
+
+
+---> adding the data into the Order_item table
+
+INSERT INTO Order_item
+(order_item_id, order_id ,quantity_added, price ,total)
+VALUES
+(9997 , 333 , 3 , 600, 1800);
+
+
+
+7) Product table ( ASK from sir that , here category or child category willc ome ?)
+
+CREATE TABLE Product(
+product_id INT PRIMARY KEY,
+product_name VARCHAR(200),
+order_item_id INT,
+price INT,
+stock_count INT,
+image_url VARCHAR(200),
+category_id INT,
+child_category_name VARCHAR(200),
+
+FOREIGN KEY (category_id) REFERENCES Category(category_id) ON DELETE CASCADE,
+FOREIGN KEY (child_category_name, category_id) REFERENCES Child_Category(child_category_name, category_id)
+
+);
+
+-->  adding the element into the product table
+
+INSERT INTO Product
+(product_id, product_name, order_item_id, price , stock_count , image_url ,category_id)
+VALUES
+(987 , 'iphone13' , '9999' , 130000, 3, 'http//myimage.com', 888 );
+
+
+
+
+8)  order_status (week entity)  [can add this into the order_item]
+
+CREATE TABLE Order_status(
+order_item_id INT NOT NULL,
+status ENUM('SHIPPED','CANCELED','RETURNED'),
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+FOREIGN KEY (order_item_id) REFERENCES Order_item(order_item_id) ON DELETE CASCADE,
+PRIMARY KEY(order_item_id, status)
+);
+
+
+---> adding inot the data into the Order_status 
+
+INSERT INTO Order_status 
+(order_item_id, status)
+VALUES
+(333, 'CANCELED');
+

@@ -1,0 +1,2 @@
+1,user1@example.com,password1,1234567890,SHOPPER
+2,user2@example.com,password2,9876543210,ADMIN
