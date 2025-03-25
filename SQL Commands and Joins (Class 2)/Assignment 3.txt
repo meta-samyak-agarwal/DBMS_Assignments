@@ -43,7 +43,7 @@ ORDER BY
 
 5) Display list of shopper along with orders placed by them in last 15 days. 
 
-SELECT shopper_id, order_id, order_date
+SELECT *
 FROM Orders
 WHERE 
     order_date >= CURRENT_DATE - INTERVAL 15 DAY
@@ -55,12 +55,12 @@ ORDER BY
 6) Display list of order items which are in “shipped” state for particular Order Id)
 
 
-SELECT oi.order_item_id, oi.product_id, os.status
-FROM Order_Items oi
+SELECT *
+FROM Order_item oi
 INNER JOIN 
     Order_Status os ON oi.order_item_id = os.order_item_id
 WHERE 
-    oi.order_id = 888 
+    oi.order_id = 9 
     AND os.status = 'shipped'; 
 
 
@@ -69,11 +69,11 @@ WHERE
 
  
 SELECT oi.order_item_id, p.product_name, p.price, o.order_date
-FROM Order_Items oi
+FROM Order_item oi
 INNER JOIN 
     Orders o ON oi.order_id = o.order_id
 INNER JOIN 
-    Product p ON oi.product_id = p.product_id
+    Product p ON oi.order_item_id = p.order_item_id
 WHERE 
     p.price BETWEEN 20 AND 50
 ORDER BY 
