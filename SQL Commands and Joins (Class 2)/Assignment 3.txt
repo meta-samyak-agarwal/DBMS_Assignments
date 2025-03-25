@@ -39,3 +39,43 @@ WHERE
 ORDER BY 
     Users.created_at ASC;
 
+
+
+5) Display list of shopper along with orders placed by them in last 15 days. 
+
+SELECT shopper_id, order_id, order_date
+FROM Orders
+WHERE 
+    order_date >= CURRENT_DATE - INTERVAL 15 DAY
+ORDER BY 
+    order_date DESC;
+
+
+
+6) Display list of order items which are in “shipped” state for particular Order Id)
+
+
+SELECT oi.order_item_id, oi.product_id, os.status
+FROM Order_Items oi
+INNER JOIN 
+    Order_Status os ON oi.order_item_id = os.order_item_id
+WHERE 
+    oi.order_id = 888 
+    AND os.status = 'shipped'; 
+
+
+
+7) Display list of order items along with order placed date which fall between Rs 20 to Rs 50 price.
+
+ 
+SELECT oi.order_item_id, p.product_name, p.price, o.order_date
+FROM Order_Items oi
+INNER JOIN 
+    Orders o ON oi.order_id = o.order_id
+INNER JOIN 
+    Product p ON oi.product_id = p.product_id
+WHERE 
+    p.price BETWEEN 20 AND 50
+ORDER BY 
+    o.order_date;
+
