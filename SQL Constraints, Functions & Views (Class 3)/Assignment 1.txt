@@ -1,0 +1,12 @@
+With respect to StoreFront application identify, apply and list the constraints you would 
+  apply on the columns for the tables created.
+
+Primary Key
+Foreign Key
+NOT NULL
+UNIQUE 
+CHECK
+DEFAULT
+AUTO_INCREMENT
+INDEX
+ON DELETE CASCADE
