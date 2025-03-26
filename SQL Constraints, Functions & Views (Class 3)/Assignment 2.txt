@@ -1,0 +1,63 @@
+ASSIGNMENT 2 :
+
+
+
+1) Display the list of products (Id, Title, Count of Categories) which fall in more than one Category.
+
+SELECT 
+    p.product_id AS Id,
+    p.product_name AS Title,
+    COUNT(DISTINCT c.category_id) AS Count_of_Categories
+FROM 
+    Product p
+INNER JOIN 
+    Category c
+ON 
+    p.category_id = c.category_id
+GROUP BY 
+    p.product_id, p.product_name
+HAVING 
+    COUNT(DISTINCT c.category_id) > 1;
+
+
+
+2) Display Count of products as per below price range:
+
+Range in Rs.   Count
+
+0 - 100
+101 - 500
+Above 500
+
+
+
+SELECT 
+    CASE 
+        WHEN price BETWEEN 0 AND 100 THEN '0 - 100'
+        WHEN price BETWEEN 101 AND 500 THEN '101 - 500'
+        ELSE 'Above 500'
+    END AS Price_Range,
+    COUNT(*) AS Product_Count
+FROM 
+    Product
+GROUP BY 
+    Price_Range;
+
+
+
+
+3) Display the Categories along with number of products under each category.
+
+
+SELECT 
+    c.category_name AS Category,
+    COUNT(p.product_id) AS Product_Count
+FROM 
+    Category c
+LEFT JOIN 
+    Product p
+ON 
+    c.category_id = p.category_id
+GROUP BY 
+    c.category_name;
+
