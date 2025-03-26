@@ -19,37 +19,41 @@ LIMIT 10;
     one or more items from those orders are still not shipped.
 
 
-SELECT o.* FROM Orders o
-INNER JOIN Order_item oi ON oi.order_id = o.order_id
-INNER JOIN order_status os ON  os.order_item_id = oi.order_item_id
-WHERE os.status != 'SHIPPED' 
+SELECT *
+FROM Orders o
+INNER JOIN Order_item oi
+ON o.order_id = oi.order_id
+INNER JOIN order_status os
+ON os.order_item_id = oi.order_item_id
+WHERE os.status != 'SHIPPED'
 AND o.order_date < NOW() - INTERVAL 10 DAY;
+ 
 
 
 
 4) Display list of shoppers which haven't ordered anything since last month.
 (used the left join coz , there maybe a shopper who havent order anything , if we use the inner join here
 
-SELECT *
-FROM Users
-LEFT JOIN Orders ON Users.user_id = Orders.user_id
-WHERE 
-    Users.type = 'SHOPPER' 
-    AND (Orders.order_date IS NULL OR Orders.order_date < NOW() - INTERVAL 30 DAY)
-ORDER BY 
-    Users.created_at ASC;
+SELECT * FROM
+USERS u
+LEFT JOIN Orders o
+ON u.user_id = o.user_id
+WHERE u.type = 'SHOPPER'
+AND o.order_date < NOW() - INTERVAL 10 DAY
+ORDER BY u.created_at ASC;
+
 
 
 
 5) Display list of shopper along with orders placed by them in last 15 days. 
 
-SELECT *
-FROM Orders
-WHERE 
-    order_date >= CURRENT_DATE - INTERVAL 15 DAY
-ORDER BY 
-    order_date DESC;
-
+SELECT u.user_id, u.type , o.order_id , o.order_date
+FROM Users u
+LEFT JOIN Orders o
+ON u.user_id = o.user_id
+WHERE o.order_date >= NOW() - INTERVAL 15 DAY
+AND u.type = 'SHOPPER';
+ 
 
 
 6) Display list of order items which are in “shipped” state for particular Order Id)
