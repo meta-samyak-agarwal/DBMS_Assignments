@@ -1,3 +1,4 @@
+
 Assignemnt2 :
 
 1) ADDING the elements into the tables;
@@ -115,41 +116,45 @@ mysql> INSERT INTO Order_status (order_item_id, status) VALUES
 2) Display Id, Title, Category Title, Price of the products which are Active and recently added products should be at top.
 
 
-SELECT product_id, product_name, price
-FROM Product
-WHERE Product.stock_count > 0
-ORDER BY created_at;
+SELECT p.product_id , p.product_name , c.category_name , p.price
+FROM Product p
+INNER JOIN Category c
+ON p.category_id = c.category_id
+WHERE p.stock_count > 0
+ORDER BY p.created_at DESC;
+ 
 
 
 3) Display the list of products which don't have any images.
-
-Query: SELECT * FROM Product
-	WHERE image_url IS NULL ;
-
+ 
+SELECT *
+FROM Product
+WHERE image_url IS NULL;
 
 
 
 4) Display all Id, Title and Parent Category Title for all the Categories listed, sorted by Parent Category Title and then Category Title. (If Category is top category then Parent Category Title column should display “Top Category” as value.) 
 
-
-  SELECT child_category_name, category_name,
-    CASE                                      
-      WHEN Child_Category.category_id IS NULL THEN 'Top Category'  
-      ELSE Category.category_name                
-      END AS Parent_Category_Title
-  FROM Child_Category
-  LEFT JOIN Category ON Child_Category.category_id = Category.category_id
-  WHERE category_name IS NOT NULL
-  ORDER BY category_name, child_category_name;             
+SELECT pc.category_id , pc.category_name , 
+   CASE 
+      WHEN child_category_name IS NULL THEN 'Top Category'
+      ELSE pc.category_name
+   END AS parent_category_title
+FROM Category pc
+INNER JOIN Child_Category cc 
+ON pc.category_id = cc.category_id
+ORDER BY parent_category_title , pc.category_name;
+             
 
  
 
 5) Display Id, Title, Parent Category Title of all the leaf Categories (categories which are not parent of any other category)
 
-
-SELECT cc.category_id, c.category_name
-FROM Child_Category cc
-INNER JOIN Category c ON c.category_id = cc.category_id;
+SELECT pc.category_name , cc.category_id
+FROM Child_category cc
+LEFT JOIN Category pc
+ON cc.category_id = pc.category_id
+WHERE category_name IS NULL;
 
  
 
@@ -157,13 +162,14 @@ INNER JOIN Category c ON c.category_id = cc.category_id;
 
 SELECT p.product_name, p.price 
 FROM Product p
-INNER JOIN Category c ON p.category_id = c.category_id
-WHERE c.category_name = 'ELECTRONICS';
+INNER JOIN Category c
+ON c.category_id = p.category_id
+WHERE c.category_name = 'Electronics';
+
 
 
 7) Display the list of Products whose Quantity on hand (Inventory) is under 50.
 
 SELECT * 
 FROM Product
-WHERE stock_count <= 50;
-
+WHERE stock <= 50 ;
