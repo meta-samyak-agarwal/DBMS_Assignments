@@ -1,0 +1,81 @@
+1) Display Recent 50 Orders placed (Id, Order Date, Order Total).
+
+SELECT * 
+FROM Orders
+ORDER BY order_date DESC
+LIMIT 50;
+
+
+
+2) Display 10 most expensive Orders.
+
+SELECT * 
+FROM Orders
+ORDER BY cart_value DESC
+LIMIT 10;
+
+
+3) Display all the Orders which are placed more than 10 days old and 
+    one or more items from those orders are still not shipped.
+
+
+SELECT *
+FROM Orders o
+INNER JOIN Order_item oi
+ON o.order_id = oi.order_id
+INNER JOIN order_status os
+ON os.order_item_id = oi.order_item_id
+WHERE os.status != 'SHIPPED'
+AND o.order_date < NOW() - INTERVAL 10 DAY;
+ 
+
+
+
+4) Display list of shoppers which haven't ordered anything since last month.
+(used the left join coz , there maybe a shopper who havent order anything , if we use the inner join here
+
+SELECT * FROM
+USERS u
+LEFT JOIN Orders o
+ON u.user_id = o.user_id
+WHERE u.type = 'SHOPPER'
+AND o.order_date < NOW() - INTERVAL 10 DAY
+ORDER BY u.created_at ASC;
+
+
+
+
+5) Display list of shopper along with orders placed by them in last 15 days. 
+
+SELECT u.user_id, u.type , o.order_id , o.order_date
+FROM Users u
+LEFT JOIN Orders o
+ON u.user_id = o.user_id
+WHERE o.order_date >= NOW() - INTERVAL 15 DAY
+AND u.type = 'SHOPPER';
+
+
+
+6) Display list of order items which are in “shipped” state for particular Order Id)
+
+SELECT oi.order_item_id 
+FROM order_item oi
+INNER JOIN order_status os
+ON oi.order_item_id = os.order_item_id
+WHERE os.status = 'SHIPPED'
+AND oi.order_id = 9;
+
+
+7) Display list of order items along with order placed date which fall between Rs 20 to Rs 50 price.
+
+SELECT oi.order_item_id, o.order_date,p.price , p.product_name
+FROM order_item oi
+INNER JOIN Orders o
+ON oi.order_id = o.order_id
+INNER JOIN Product p
+ON p.order_item_id = oi.order_item_id
+WHERE p.price BETWEEN 20 AND 50
+ORDER BY
+o.order_date;
+
+

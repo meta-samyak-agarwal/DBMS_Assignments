@@ -1,3 +1,4 @@
+
 Assignemnt2 :
 
 1) ADDING the elements into the tables;
@@ -14,22 +15,20 @@ mysql> INSERT INTO Users (user_id, email_id, password, phone, type) VALUES
     -> (8, 'olivia.moore@example.com', 'oliviaPass', '9911223344', 'SHOPPER'),
     -> (9, 'henry.taylor@example.com', 'henryPass', '9109876543', 'SHOPPER'),
     -> (10, 'sophia.anderson@example.com', 'sophia123', '8899776655', 'SHOPPER');
-Query OK, 10 rows affected (0.01 sec)
-Records: 10  Duplicates: 0  Warnings: 0
+ 
 
-mysql> INSERT INTO Address (user_id, state, city, street, pincode) VALUES
-    -> (1, 'California', 'Los Angeles', 'Main St', 90001),
-    -> (2, 'New York', 'Brooklyn', 'Elm St', 11201),
-    -> (3, 'Texas', 'Houston', 'Oak St', 77001),
-    -> (4, 'Illinois', 'Chicago', 'Pine St', 60601),
-    -> (5, 'Florida', 'Miami', 'Maple St', 33101),
+  INSERT INTO Address (user_id, state, city, street, pincode) VALUES
+    (1, 'California', 'Los Angeles', 'Main St', 90001),
+     (2, 'New York', 'Brooklyn', 'Elm St', 11201),
+     (3, 'Texas', 'Houston', 'Oak St', 77001),
+     (4, 'Illinois', 'Chicago', 'Pine St', 60601),
+     (5, 'Florida', 'Miami', 'Maple St', 33101),
     -> (6, 'Georgia', 'Atlanta', 'Cedar St', 30301),
     -> (7, 'Nevada', 'Las Vegas', 'Spruce St', 89101),
     -> (8, 'Arizona', 'Phoenix', 'Willow St', 85001),
     -> (9, 'Washington', 'Seattle', 'Birch St', 98101),
     -> (10, 'Colorado', 'Denver', 'Ash St', 80201);
-Query OK, 10 rows affected (0.01 sec)
-Records: 10  Duplicates: 0  Warnings: 0
+
 
 mysql> INSERT INTO Orders (user_id, cart_value, address_id) VALUES
     -> (1, 250.75, 1),
@@ -42,8 +41,7 @@ mysql> INSERT INTO Orders (user_id, cart_value, address_id) VALUES
     -> (8, 149.99, 8),
     -> (9, 240.10, 9),
     -> (10, 299.80, 10);
-Query OK, 10 rows affected (0.01 sec)
-Records: 10  Duplicates: 0  Warnings: 0
+
 
 mysql> INSERT INTO Category (category_id, category_name) VALUES
     -> (1, 'Electronics'),
@@ -56,8 +54,7 @@ mysql> INSERT INTO Category (category_id, category_name) VALUES
     -> (8, 'Stationery'),
     -> (9, 'Beauty'),
     -> (10, 'Groceries');
-Query OK, 10 rows affected (0.01 sec)
-Records: 10  Duplicates: 0  Warnings: 0
+
 
 mysql> INSERT INTO Child_Category (child_category_name, category_id) VALUES
     -> ('Mobile Phones', 1),
@@ -70,8 +67,7 @@ mysql> INSERT INTO Child_Category (child_category_name, category_id) VALUES
     -> ('Fitness', 5),
     -> ('Outdoor', 5),
     -> ('Study Tables', 7);
-Query OK, 10 rows affected (0.01 sec)
-Records: 10  Duplicates: 0  Warnings: 0
+
 
 mysql> INSERT INTO Order_item (order_item_id, order_id, quantity_added, total) VALUES
     -> (1, 1, 2, 500),
@@ -84,8 +80,7 @@ mysql> INSERT INTO Order_item (order_item_id, order_id, quantity_added, total) V
     -> (8, 8, 3, 450),
     -> (9, 9, 2, 480),
     -> (10, 10, 1, 300);
-Query OK, 10 rows affected (0.01 sec)
-Records: 10  Duplicates: 0  Warnings: 0
+
 
 mysql> INSERT INTO Product (product_id, product_name, order_item_id, price, stock_count, image_url, category_id, child_category_name) VALUES
     -> (1, 'iPhone 13', 1, 1000, 50, 'url1', 1, 'Mobile Phones'),
@@ -98,8 +93,7 @@ mysql> INSERT INTO Product (product_id, product_name, order_item_id, price, stoc
     -> (8, 'Dumbbells', 8, 30, 80, 'url8', 5, 'Fitness'),
     -> (9, 'Tent', 9, 100, 50, 'url9', 5, 'Outdoor'),
     -> (10, 'Study Desk', 10, 200, 40, 'url10', 7, 'Study Tables');
-Query OK, 10 rows affected (0.01 sec)
-Records: 10  Duplicates: 0  Warnings: 0
+
 
 mysql> INSERT INTO Order_status (order_item_id, status) VALUES
     -> (1, 'SHIPPED'),
@@ -122,19 +116,62 @@ mysql> INSERT INTO Order_status (order_item_id, status) VALUES
 2) Display Id, Title, Category Title, Price of the products which are Active and recently added products should be at top.
 
 
+SELECT p.product_id , p.product_name , c.category_name , p.price
+FROM Product p
+INNER JOIN Category c
+ON p.category_id = c.category_id
+WHERE p.stock_count > 0
+ORDER BY p.created_at DESC;
+ 
+
 
 3) Display the list of products which don't have any images.
+ 
+SELECT *
+FROM Product
+WHERE image_url IS NULL;
 
 
-4) Display all Id, Title and Parent Category Title for all the Categories listed, sorted by Parent Category Title and then Category Title. (If Category is top category then Parent Category Title column should display “Top Category” as value.)
 
+4) Display all Id, Title and Parent Category Title for all the Categories listed, sorted by Parent Category Title and then Category Title. (If Category is top category then Parent Category Title column should display “Top Category” as value.) 
+
+SELECT pc.category_id , pc.category_name , 
+   CASE 
+      WHEN child_category_name IS NULL THEN 'Top Category'
+      ELSE pc.category_name
+   END AS parent_category_title
+FROM Category pc
+INNER JOIN Child_Category cc 
+ON pc.category_id = cc.category_id
+ORDER BY parent_category_title , pc.category_name;
+             
+
+ 
 
 5) Display Id, Title, Parent Category Title of all the leaf Categories (categories which are not parent of any other category)
 
+SELECT pc.category_name , cc.category_id
+FROM Child_category cc
+LEFT JOIN Category pc
+ON cc.category_id = pc.category_id
+WHERE category_name IS NULL;
+
+ 
 
 6) Display Product Title, Price & Description which falls into particular category Title (i.e. “Mobile”)
+
+SELECT p.product_name, p.price 
+FROM Product p
+INNER JOIN Category c
+ON c.category_id = p.category_id
+WHERE c.category_name = 'Electronics';
 
 
 
 7) Display the list of Products whose Quantity on hand (Inventory) is under 50.
 
+SELECT * 
+FROM Product
+WHERE stock <= 50 ;
+
+ 
