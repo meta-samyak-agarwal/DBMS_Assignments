@@ -1,6 +1,10 @@
 1) user table
 
 CREATE TABLE Users(
+<<<<<<< HEAD
+=======
+
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 user_id INT PRIMARY KEY,
 email_id VARCHAR(200) UNIQUE,
 password VARCHAR(20),
@@ -9,12 +13,16 @@ type ENUM('ADMIN','SHOPPER'),
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+<<<<<<< HEAD
 ---> adding the content into the table user
 
 INSERT INTO 
 Users(user_id,email_id,password, phone , type) 
 VALUES
 (1,'samyak@gmail.com','samyak1111','9351153080','SHOPPER');
+=======
+ 
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 
 2) Address table
@@ -29,6 +37,7 @@ pincode INT,
 
 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
+<<<<<<< HEAD
 
 --->  adding the data into the Address table
 
@@ -38,6 +47,12 @@ VALUES(111 , 1 , 'rajasthan' , 'jaipur' , 'mansarovar' , '302020');
 
 
 3) order/cart table 
+=======
+ 
+
+
+3) orders/cart table 
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 CREATE TABLE Orders(
 order_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -50,6 +65,7 @@ FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
 FOREIGN KEY (address_id) REFERENCES Address(address_id) ON DELETE CASCADE
 );
 
+<<<<<<< HEAD
 
 --> adding the data into the order table
 
@@ -57,6 +73,9 @@ INSERT INTO Orders
 (order_id, user_id, cart_value , address_id)
 VALUES
 (333, 1 , 987 , 111);
+=======
+ 
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 
 4) Category table
@@ -66,12 +85,16 @@ category_id INT PRIMARY KEY,
 category_name VARCHAR(200) NOT NULL UNIQUE
 );
 
+<<<<<<< HEAD
 --> adding the data into the  Category table
 
 INSERT INTO Category
 (category_id, category_name)
 VALUES
 (888, 'Electronics');
+=======
+ 
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 
 
@@ -85,6 +108,7 @@ FOREIGN KEY (category_id) REFERENCES Category(category_id) ON DELETE CASCADE,
 PRIMARY KEY(child_category_name, category_id)
 );
 
+<<<<<<< HEAD
 --->  adding the data into the Child_catgorytable
 
 INSERT INTO Child_Category
@@ -94,6 +118,12 @@ VALUES
 
 
 6) order_item table (weak entity)
+=======
+ 
+
+
+6) order_item table 
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 CREATE TABLE Order_item(
 order_item_id INT PRIMARY KEY NOT NULL,   
@@ -105,6 +135,7 @@ FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE
 );
 
 
+<<<<<<< HEAD
 ---> adding the data into the Order_item table
 
 INSERT INTO Order_item
@@ -115,6 +146,19 @@ VALUES
 
 
 7) Product table ( ASK from sir that , here category or child category willc ome ?)
+=======
+--> query for the update the total in the order_item
+UPDATE Order_item oi
+JOIN Product p ON oi.order_item_id = p.order_item_id
+SET oi.total = oi.quantity_added * p.price;
+
+
+ 
+
+
+
+7) Product table 
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 CREATE TABLE Product(
 product_id INT PRIMARY KEY,
@@ -127,6 +171,7 @@ category_id INT,
 child_category_name VARCHAR(200),
 
 FOREIGN KEY (category_id) REFERENCES Category(category_id) ON DELETE CASCADE,
+<<<<<<< HEAD
 FOREIGN KEY (child_category_name, category_id) REFERENCES Child_Category(child_category_name, category_id)
 
 );
@@ -137,6 +182,14 @@ INSERT INTO Product
 (product_id, product_name, order_item_id, price , stock_count , image_url ,category_id)
 VALUES
 (987 , 'iphone13' , '9999' , 130000, 3, 'http//myimage.com', 888 );
+=======
+FOREIGN KEY (child_category_name, category_id) REFERENCES Child_Category(child_category_name, category_id),
+FOREIGN KEY (order_item_id) REFERENCES Order_item(order_item_id) ON DELETE CASCADE
+
+);
+
+ 
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 
 
@@ -153,10 +206,16 @@ PRIMARY KEY(order_item_id, status)
 );
 
 
+<<<<<<< HEAD
 ---> adding inot the data into the Order_status 
 
 INSERT INTO Order_status 
 (order_item_id, status)
 VALUES
 (333, 'CANCELED');
+=======
+ 
+
+
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 

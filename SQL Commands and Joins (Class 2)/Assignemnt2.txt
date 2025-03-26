@@ -173,5 +173,8 @@ WHERE c.category_name = 'Electronics';
 SELECT * 
 FROM Product
 WHERE stock <= 50 ;
+<<<<<<< HEAD
 
  
+=======
+>>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
