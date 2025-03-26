@@ -53,49 +53,24 @@ LEFT JOIN Orders o
 ON u.user_id = o.user_id
 WHERE o.order_date >= NOW() - INTERVAL 15 DAY
 AND u.type = 'SHOPPER';
-<<<<<<< HEAD
-
-=======
  
->>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 
 6) Display list of order items which are in “shipped” state for particular Order Id)
 
-<<<<<<< HEAD
+ 
 SELECT oi.order_item_id 
 FROM order_item oi
 INNER JOIN order_status os
 ON oi.order_item_id = os.order_item_id
 WHERE os.status = 'SHIPPED'
 AND oi.order_id = 9;
-=======
+ 
 
-SELECT *
-FROM Order_item oi
-INNER JOIN 
-    Order_Status os ON oi.order_item_id = os.order_item_id
-WHERE 
-    oi.order_id = 9 
-    AND os.status = 'shipped'; 
-
->>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
 
 
 7) Display list of order items along with order placed date which fall between Rs 20 to Rs 50 price.
-
-<<<<<<< HEAD
-SELECT oi.order_item_id, o.order_date,p.price , p.product_name
-FROM order_item oi
-INNER JOIN Orders o
-ON oi.order_id = o.order_id
-INNER JOIN Product p
-ON p.order_item_id = oi.order_item_id
-WHERE p.price BETWEEN 20 AND 50
-ORDER BY
-o.order_date;
-
-=======
+ 
  
 SELECT oi.order_item_id, p.product_name, p.price, o.order_date
 FROM Order_item oi
@@ -107,5 +82,5 @@ WHERE
     p.price BETWEEN 20 AND 50
 ORDER BY 
     o.order_date;
->>>>>>> a64b6805974d9fb09f23e2157a75c568effc8ad5
+ 
 
