@@ -1,0 +1,75 @@
+Assignment 4 :
+
+// State table
+
+CREATE TABLE state(
+state_name VARCHAR(200) NOT NULL,
+state_id INT PRIMARY KEY
+);
+
+
+// city table
+
+CREATE TABLE city(
+city_id INT PRIMARY KEY,
+city_name VARCHAR(200) NOT NULL,
+state_id INT,
+
+FOREIGN KEY (state_id) REFERENCES state(state_id) ON DELETE CASCADE
+);
+
+// pincode table
+
+CREATE TABLE pincode(
+pincode_id INT PRIMARY KEY,
+pincode VARCHAR(10) NOT NULL,
+city_id INT,
+
+FOREIGN KEY (city_id) REFERENCES city(city_id) ON DELETE CASCADE
+);
+
+
+// Inserting data into the tables
+
+INSERT INTO pincode (pincode_id, pincode, city_id)
+VALUES 
+    (1, '302020', 6),
+    (2, '302021', 7),
+    (3, '302022', 8);
+
+
+INSERT INTO city (city_id, city_name, state_id)
+VALUES 
+    (6, 'jaipur', 11),
+    (7, 'agra', 12),
+    (8, 'lucknow', 12);
+
+INSERT INTO state (state_id, state_name)
+VALUES 
+    (11, 'rajasthan'),
+    (12, 'uttar pradesh');
+
+
+
+// query asked in question.
+
+Q)   write a SQL query for that returns a Resultset containing Zip Code, City Names and States ordered by State Name and City Name.
+ 
+
+SELECT 
+    p.pincode AS Zip_Code,
+    c.city_name AS City_Name,
+    s.state_name AS State_Name
+FROM 
+    pincode p
+INNER JOIN 
+    city c ON p.city_id = c.city_id
+INNER JOIN 
+    state s ON c.state_id = s.state_id
+ORDER BY 
+    s.state_name ASC, 
+    c.city_name ASC;
+
+
+
+
