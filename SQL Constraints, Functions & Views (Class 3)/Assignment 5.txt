@@ -38,9 +38,11 @@ WHERE status = 'SHIPPED';
 
 3) Use the above view to display the top 5 most selling products.
 
-SELECT ro.order_item_id , oi.quantity_added AS Quantity
+SELECT ro.order_item_id, p.product_name , oi.quantity_added AS Quantity
 FROM recent_orders ro
+INNER JOIN Product p
+ON p.order_item_id = ro.order_item_id
 INNER JOIN Order_item oi
-ON ro.order_item_id = oi.order_item_id
+ON oi.order_item_id = ro.order_item_id
 ORDER BY Quantity DESC
 LIMIT 5;
