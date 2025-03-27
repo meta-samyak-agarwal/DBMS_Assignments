@@ -1,0 +1,93 @@
+Assignmnt 
+
+1) Display Shopper’s information along with number of orders he/she placed during last 30 days.
+
+SELECT 
+	u.type AS Shopper_name ,
+	 u.user_id, u.email_id , 
+	COUNT(o.order_id) AS Orders_count
+FROM Users u
+INNER JOIN Orders o
+ON o.user_id = u.user_id
+WHERE u.type = 'SHOPPER'
+GROUP BY u.user_id ,u.user_id, u.email_id ;
+
+
+2) Display the top 10 Shoppers who generated maximum number of revenue in last 30 days.
+
+SELECT u.user_id,
+       u.type,
+       u.email_id,
+       SUM(o.cart_value)
+FROM Users u
+INNER JOIN Orders o
+ON o.user_id = u.user_id
+WHERE u.type = 'SHOPPER'
+GROUP BY u.user_id, u.type , u.email_id
+ORDER BY SUM(o.cart_value) DESC
+LIMIT 9;
+
+
+3) Display top 20 Products which are ordered most in last 60 days along with numbers.
+
+
+SELECT p.product_name AS NAME,
+       COUNT(o.order_id) AS Order_Count
+FROM Product p
+INNER JOIN Order_item oi
+ON oi.order_item_id = p.order_item_id
+INNER JOIN Orders o
+ON o.order_id = oi.order_id
+WHERE o.order_date > NOW() - INTERVAL 60 DAY
+GROUP BY p.product_name
+ORDER BY Order_Count DESC
+LIMIT 20;
+
+
+ 
+
+4) Display Monthly sales revenue of the StoreFront for last 6 months. It should display each month’s sale.
+
+
+
+
+5) Mark the products as Inactive which are not ordered in last 90 days.
+ 
+
+SELECT p.product_name AS Product_name ,
+    CASE
+       WHEN o.order_date < NOW() - INTERVAL 90 DAY THEN 'INACTIVE'
+       ELSE 'ACTIVE'
+    END AS Status
+FROM Product p
+INNER JOIN Order_item oi
+ON oi.order_item_id = p.order_item_id
+INNER JOIN Orders o
+ON o.order_id = oi.order_id ;
+
+
+
+6) Given a category search keyword, display all the Products present in this category/categories. 
+
+
+  SELECT
+        p.product_name AS Product_Name ,
+        p.product_id AS Product_id
+  FROM Category c
+  INNER JOIN Product p
+  ON c.category_id = p.category_id
+  WHERE c.category_name = "ELECTRONICS";
+ 
+ 
+
+7) Display top 10 Items which were cancelled most.
+
+SELECT oi.order_item_id AS Order_Item_ID , 
+       COUNT(os.status) AS Cancelled_Count
+FROM Order_item oi
+INNER JOIN Order_status os
+ON oi.order_item_id = os.order_item_id
+WHERE os.status = "CANCELED"
+GROUP BY oi.order_item_id
+ORDER BY Cancelled_Count DESC
+LIMIT 5;
