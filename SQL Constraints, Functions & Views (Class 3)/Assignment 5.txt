@@ -1,0 +1,46 @@
+Assignment 5:
+
+
+1) Create a view displaying the order information (Id, Title, Price, Shopper’s name, Email, Orderdate, Status) 
+with latest ordered items should be displayed first for last 60 days.
+
+CREATE VIEW recent_orders AS
+SELECT 
+	oi.order_item_id,
+	p.price ,
+	u.user_id, 
+	u.email_id, 
+	o.order_date, 
+	os.status
+FROM 
+    Order_item oi
+INNER JOIN
+    Orders o ON o.order_id = oi.order_id
+INNER JOIN 
+    Users u ON u.user_id = o.user_id
+INNER JOIN 
+    Product p ON p.order_item_id = oi.order_item_id
+INNER JOIN 
+    Order_status os ON os.order_item_id = oi.order_item_id
+WHERE 
+    o.order_date > NOW() - INTERVAL 60 DAY
+ORDER BY 
+    o.order_date;		
+
+
+
+2) Use the above view to display the Products(Items) which are in ‘shipped’ state.
+
+SELECT order_item_id 
+FROM recent_orders
+WHERE status = 'SHIPPED';
+
+
+3) Use the above view to display the top 5 most selling products.
+
+SELECT ro.order_item_id , oi.quantity_added AS Quantity
+FROM recent_orders ro
+INNER JOIN Order_item oi
+ON ro.order_item_id = oi.order_item_id
+ORDER BY Quantity DESC
+LIMIT 5;
