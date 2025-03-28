@@ -1,4 +1,4 @@
-Assignmnt 
+Assignmnt 3
 
 1) Display Shopper’s information along with number of orders he/she placed during last 30 days.
 
@@ -6,11 +6,15 @@ SELECT
 	u.type AS Shopper_name ,
 	 u.user_id, u.email_id , 
 	COUNT(o.order_id) AS Orders_count
-FROM Users u
-INNER JOIN Orders o
-ON o.user_id = u.user_id
-WHERE u.type = 'SHOPPER'
-GROUP BY u.user_id ,u.user_id, u.email_id ;
+FROM 
+    Users u
+INNER JOIN 
+    Orders o ON o.user_id = u.user_id
+WHERE 
+    u.type = 'SHOPPER' AND o.order_date > NOW() - INTERVAL 30 DAY
+GROUP BY
+    u.user_id ,u.user_id, u.email_id ;
+
 
 
 2) Display the top 10 Shoppers who generated maximum number of revenue in last 30 days.
@@ -25,22 +29,25 @@ ON o.user_id = u.user_id
 WHERE u.type = 'SHOPPER'
 GROUP BY u.user_id, u.type , u.email_id
 ORDER BY SUM(o.cart_value) DESC
-LIMIT 9;
+LIMIT 10;
 
 
 3) Display top 20 Products which are ordered most in last 60 days along with numbers.
 
 
 SELECT p.product_name AS NAME,
-       COUNT(o.order_id) AS Order_Count
+       COUNT(oi.quantity_added) AS Order_Count
 FROM Product p
-INNER JOIN Order_item oi
-ON oi.order_item_id = p.order_item_id
-INNER JOIN Orders o
-ON o.order_id = oi.order_id
-WHERE o.order_date > NOW() - INTERVAL 60 DAY
-GROUP BY p.product_name
-ORDER BY Order_Count DESC
+INNER JOIN 
+   Order_item oi ON oi.order_item_id = p.order_item_id
+INNER JOIN 
+   Orders o ON o.order_id = oi.order_id
+WHERE 
+   o.order_date > NOW() - INTERVAL 60 DAY
+GROUP BY 
+   p.product_name
+ORDER BY 
+   Order_Count DESC
 LIMIT 20;
 
 
@@ -49,6 +56,31 @@ LIMIT 20;
 4) Display Monthly sales revenue of the StoreFront for last 6 months. It should display each month’s sale.
 
 
+SELECT 
+    CASE 
+        WHEN order_date BETWEEN '2024-10-01' AND '2024-10-31' THEN 'Month 1'
+        WHEN order_date BETWEEN '2024-11-01' AND '2024-11-30' THEN 'Month 2'
+        WHEN order_date BETWEEN '2024-12-01' AND '2024-12-31' THEN 'Month 3'
+        WHEN order_date BETWEEN '2025-01-01' AND '2025-01-30' THEN 'Month 4'
+        WHEN order_date BETWEEN '2025-02-01' AND '2025-02-27' THEN 'Month 5'
+        WHEN order_date BETWEEN '2025-03-01' AND '2025-03-27' THEN 'Month 6'
+	ELSE 'Before 6 months'
+    END AS Month,
+     SUM(cart_value) AS Sales
+FROM 
+    Orders
+GROUP BY 
+    CASE 
+        WHEN order_date BETWEEN '2024-10-01' AND '2024-10-31' THEN 'Month 1'
+        WHEN order_date BETWEEN '2024-11-01' AND '2024-11-30' THEN 'Month 2'
+        WHEN order_date BETWEEN '2024-12-01' AND '2024-12-31' THEN 'Month 3'
+        WHEN order_date BETWEEN '2025-01-01' AND '2025-01-30' THEN 'Month 4'
+        WHEN order_date BETWEEN '2025-02-01' AND '2025-02-27' THEN 'Month 5'
+        WHEN order_date BETWEEN '2025-03-01' AND '2025-03-27' THEN 'Month 6'
+	ELSE 'Before 6 months'
+    END;
+ 
+
 
 
 5) Mark the products as Inactive which are not ordered in last 90 days.
@@ -56,14 +88,15 @@ LIMIT 20;
 
 SELECT p.product_name AS Product_name ,
     CASE
-       WHEN o.order_date < NOW() - INTERVAL 90 DAY THEN 'INACTIVE'
+       WHEN o.order_date > NOW() - INTERVAL 90 DAY THEN 'INACTIVE'
        ELSE 'ACTIVE'
     END AS Status
-FROM Product p
-INNER JOIN Order_item oi
-ON oi.order_item_id = p.order_item_id
-INNER JOIN Orders o
-ON o.order_id = oi.order_id ;
+FROM 
+    Product p
+INNER JOIN 
+    Order_item oi ON oi.order_item_id = p.order_item_id
+INNER JOIN 
+    Orders o ON o.order_id = oi.order_id ;
 
 
 
@@ -82,12 +115,21 @@ ON o.order_id = oi.order_id ;
 
 7) Display top 10 Items which were cancelled most.
 
-SELECT oi.order_item_id AS Order_Item_ID , 
+
+SELECT p.product_name AS Product_name , 
        COUNT(os.status) AS Cancelled_Count
-FROM Order_item oi
-INNER JOIN Order_status os
-ON oi.order_item_id = os.order_item_id
-WHERE os.status = "CANCELED"
-GROUP BY oi.order_item_id
-ORDER BY Cancelled_Count DESC
+FROM 
+     Order_item oi
+INNER JOIN 
+     Order_status os ON oi.order_item_id = os.order_item_id
+INNER JOIN 
+     Product p ON p.order_item_id = oi.order_item_id
+WHERE 
+     os.status = "CANCELED"
+GROUP BY 
+     p.product_name
+ORDER BY 
+     Cancelled_Count DESC
 LIMIT 5;
+
+
