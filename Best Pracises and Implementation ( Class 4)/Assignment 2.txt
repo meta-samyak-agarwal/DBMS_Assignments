@@ -3,18 +3,24 @@
 
 DELIMITER $$
 
-CREATE PROCEDURE average_Sales(month INT , year INT)
+CREATE PROCEDURE average_s(month INT , year INT)
 BEGIN
 
-SELECT p.product_name , AVG(p.total) AS average_sales
-FROM Product p
-LEFT JOIN Order_item oi
-ON oi.order_item_id = p.order_item_id
-LEFT JOIN Orders o
-ON o.order_id = oi.order_id
-WHERE MONTH(o.order_date) = month AND YEAR(o.order_date) = year
-GROUP BY p.product_name
-ORDER BY average_sales;
+SELECT 
+    p.product_name ,
+    AVG(oi.total) AS average_sales
+FROM 
+   Product p
+LEFT JOIN 
+   Order_item oi ON oi.order_item_id = p.order_item_id
+LEFT JOIN 
+  Orders o ON o.order_id = oi.order_id
+WHERE 
+  MONTH(o.order_date) = month AND YEAR(o.order_date) = year
+GROUP BY
+   p.product_name
+ORDER BY 
+   average_sales;
 
 END$$
 DELIMITER;
@@ -35,7 +41,7 @@ BEGIN
 
       IF 
          start_date > end_date  THEN
-      SET start_date = DATE_FORMAT(start_date , '%Y-%m-01');
+      SET start_date = DATE_FORMAT(end_date , '%Y-%m-01');
       END IF;
 
 SELECT o.order_id , oi.order_item_id , os.status
