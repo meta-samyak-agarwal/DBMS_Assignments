@@ -1,12 +1,99 @@
-With respect to StoreFront application identify, apply and list the constraints you would 
-  apply on the columns for the tables created.
+With respect to StoreFront application identify, apply and list the constraints you would apply on the columns for the tables created.
 
-Primary Key
-Foreign Key
-NOT NULL
-UNIQUE 
-CHECK
-DEFAULT
-AUTO_INCREMENT
-INDEX
-ON DELETE CASCADE
+
+1) Users Table
+
+user_id: Primary Key constraint
+
+email_id: Unique constraint  
+
+password: Not Null constraint 
+
+phone: Unique constraint  
+
+type: Enum constraint  
+
+created_at: Default constraint  
+
+
+ 
+
+2) Address Table
+
+address_id: Primary Key and Auto Increment constraint
+
+user_id: Not Null and Foreign Key constraint  
+
+state, city, street: Not Null constraint  
+ 
+ 
+
+3) Orders Table (Cart)
+
+order_id: Primary Key and Auto Increment constraint
+
+user_id: Foreign Key constraint.
+
+cart_value: Decimal constraint  
+
+order_date: Default constraint 
+
+address_id: Foreign Key constraint
+
+ 
+
+4) Category Table
+
+category_id: Primary Key constraint
+
+category_name: Not Null and Unique constraint.
+
+ 
+
+5) Child Category Table (Weak Entity)
+
+child_category_name and category_id: Composite Primary Key constraint.
+
+category_id: Foreign Key constraint
+
+
+
+6) Order Item Table (Weak Entity)
+
+order_item_id: Primary Key constraint.
+
+order_id: Foreign Key constraint.
+
+quantity_added: Check constraint.
+
+total: Decimal constraint.
+
+ 
+
+7) Product Table
+
+product_id: Primary Key constraint.
+
+product_name: Not Null constraint.
+
+price: Decimal constraint.
+
+stock_count: Check constraint.
+
+category_id: Foreign Key constraint.
+
+child_category_name: Foreign Key constraint.
+
+order_item_id: Foreign Key constraint.
+
+ 
+
+8) Order Status Table (Weak Entity)
+
+order_item_id and status: Composite Primary Key constraint.
+
+order_item_id: Foreign Key constraint.
+
+status: Enum constraint.
+
+updated_at: Default constraint.
