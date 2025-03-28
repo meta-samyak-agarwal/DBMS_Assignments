@@ -1,0 +1,53 @@
+1) Create a Stored procedure to retrieve average sales of each product in a month. Month and year will be input parameter to function.
+
+
+DELIMITER $$
+
+CREATE PROCEDURE average_Sales(month INT , year INT)
+BEGIN
+
+SELECT p.product_name , AVG(p.total) AS average_sales
+FROM Product p
+LEFT JOIN Order_item oi
+ON oi.order_item_id = p.order_item_id
+LEFT JOIN Orders o
+ON o.order_id = oi.order_id
+WHERE MONTH(o.order_date) = month AND YEAR(o.order_date) = year
+GROUP BY p.product_name
+ORDER BY average_sales;
+
+END$$
+DELIMITER;
+
+
+
+
+
+
+2)  Create a stored procedure to retrieve : 
+
+table having order detail with status for a given period. Start date and end date will be input parameter. Put validation on input dates like start date is less than end date. If start date is greater than end date take first date of month as start date.
+
+
+DELIMITER $$
+CREATE PROCEDURE order_detail(start_date DATE , end_date DATE)
+BEGIN
+
+      IF 
+         start_date > end_date  THEN
+      SET start_date = DATE_FORMAT(start_date , '%Y-%m-01');
+      END IF;
+
+SELECT o.order_id , oi.order_item_id , os.status
+FROM Order_item oi
+INNER JOIN 
+    Order_status os ON os.order_item_id = oi.order_item_id
+INNER JOIN 
+    Orders o ON o.order_id = oi.order_id
+WHERE o.order_date BETWEEN start_date AND end_date;
+
+
+END$$
+DELIMITER;
+
+
