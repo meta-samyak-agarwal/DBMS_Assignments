@@ -1,0 +1,4 @@
+SELECT o.order_id, o.order_date, o.cart_value FROM Users u INNER JOIN Orders o ON o.user_id = u.user_id WHERE u.user_id = "1" AND NOT EXISTS (SELECT * FROM Order_Item oi LEFT JOIN Order_status os ON os.order_item_id = oi.order_item_id WHERE oi.order_id = o.order_id AND os.status != 'shipped') ORDER BY o.order_date;
+INSERT INTO images (image_id, image_url, product_id) VALUES (?, ?, ?)
+DELETE FROM Product WHERE product_id NOT IN (SELECT DISTINCT oi.product_id FROM Orders o INNER JOIN Order_Item oi ON oi.order_id = o.order_id WHERE o.order_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR));
+SELECT c.category_name AS TITLE, COUNT(c.category_id) FROM Category c LEFT JOIN Child_category cc ON cc.category_id = c.category_id GROUP BY TITLE ORDER BY TITLE;
